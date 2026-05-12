@@ -2,8 +2,19 @@
 
 import React from "react";
 
+type CuisineInfo = {
+  type: string;
+  foods: string[];
+};
+
+type ResultItem = {
+  cuisine: string;
+  type: string;
+  foods: string[];
+};
+
 export default function RandomDinnerPicker() {
-  const cuisineData = {
+  const cuisineData: Record<string, CuisineInfo> = {
     川菜: {
       type: "中餐",
       foods: [
@@ -18,6 +29,7 @@ export default function RandomDinnerPicker() {
         "烤鱼"
       ]
     },
+
     粤菜: {
       type: "中餐",
       foods: [
@@ -32,6 +44,7 @@ export default function RandomDinnerPicker() {
         "早茶"
       ]
     },
+
     湘菜: {
       type: "中餐",
       foods: [
@@ -42,6 +55,7 @@ export default function RandomDinnerPicker() {
         "手撕包菜"
       ]
     },
+
     东北菜: {
       type: "中餐",
       foods: [
@@ -52,6 +66,7 @@ export default function RandomDinnerPicker() {
         "酸辣土豆丝"
       ]
     },
+
     家常炒菜: {
       type: "炒菜",
       foods: [
@@ -68,6 +83,7 @@ export default function RandomDinnerPicker() {
         "葱爆羊肉"
       ]
     },
+
     火锅烧烤: {
       type: "聚餐",
       foods: [
@@ -79,6 +95,7 @@ export default function RandomDinnerPicker() {
         "日式烤肉"
       ]
     },
+
     面食米饭: {
       type: "主食",
       foods: [
@@ -92,6 +109,7 @@ export default function RandomDinnerPicker() {
         "黄焖鸡米饭"
       ]
     },
+
     日料: {
       type: "亚洲料理",
       foods: [
@@ -102,6 +120,7 @@ export default function RandomDinnerPicker() {
         "蛋包饭"
       ]
     },
+
     韩餐: {
       type: "亚洲料理",
       foods: [
@@ -111,6 +130,7 @@ export default function RandomDinnerPicker() {
         "部队锅"
       ]
     },
+
     泰餐: {
       type: "东南亚",
       foods: [
@@ -120,6 +140,7 @@ export default function RandomDinnerPicker() {
         "泰式菠萝饭"
       ]
     },
+
     西餐: {
       type: "西式",
       foods: [
@@ -130,6 +151,7 @@ export default function RandomDinnerPicker() {
         "三明治"
       ]
     },
+
     轻食: {
       type: "健康",
       foods: [
@@ -139,6 +161,7 @@ export default function RandomDinnerPicker() {
         "牛油果沙拉"
       ]
     },
+
     小吃夜宵: {
       type: "小吃",
       foods: [
@@ -150,6 +173,7 @@ export default function RandomDinnerPicker() {
         "夜宵大排档"
       ]
     },
+
     甜品饮品: {
       type: "甜点",
       foods: [
@@ -162,14 +186,14 @@ export default function RandomDinnerPicker() {
     }
   };
 
-  const [results, setResults] = React.useState([]);
-  const [count, setCount] = React.useState(3);
-  const [clickCount, setClickCount] = React.useState(0);
-  const [message, setMessage] = React.useState("");
+  const [results, setResults] = React.useState<ResultItem[]>([]);
+  const [count, setCount] = React.useState<number>(3);
+  const [clickCount, setClickCount] = React.useState<number>(0);
+  const [message, setMessage] = React.useState<string>("");
   const [usedMessages, setUsedMessages] = React.useState<string[]>([]);
-  const [isBouncing, setIsBouncing] = React.useState(false);
+  const [isBouncing, setIsBouncing] = React.useState<boolean>(false);
 
-  const funnyMessages = [
+  const funnyMessages: string[] = [
     "实在不知道吃什么，就别难为自己了",
     "建议直接去厨房自己发挥",
     "AI 检测到：你们并不是真的饿",
@@ -177,19 +201,20 @@ export default function RandomDinnerPicker() {
     "不吃了，修仙"
   ];
 
-  const easterEggs: Record<number, string>  = {
+  const easterEggs: Record<number, string> = {
     7: "再给你们一次机会",
     9: "建议直接吃上一顿剩下的",
     12: "我累了，你们自己看着办吧"
   };
 
-  const generateFoods = () => {
+  const generateFoods = (): void => {
     const newClickCount = clickCount + 1;
+
     setClickCount(newClickCount);
 
     if (newClickCount > 5) {
       const availableMessages = funnyMessages.filter(
-        (msg) => !usedMessages.includes(msg)
+        (msg: string) => !usedMessages.includes(msg)
       );
 
       if (availableMessages.length > 0) {
@@ -204,7 +229,11 @@ export default function RandomDinnerPicker() {
         setTimeout(() => {
           setIsBouncing(false);
         }, 5000);
-        setUsedMessages((prev) => [...prev, randomMessage]);
+
+        setUsedMessages((prev: string[]) => [
+          ...prev,
+          randomMessage
+        ]);
       }
     }
 
@@ -216,6 +245,7 @@ export default function RandomDinnerPicker() {
         setIsBouncing(false);
       }, 5000);
     }
+
     const cuisineNames = Object.keys(cuisineData);
 
     const shuffledCuisine = [...cuisineNames].sort(
@@ -224,20 +254,26 @@ export default function RandomDinnerPicker() {
 
     const selectedCuisine = shuffledCuisine.slice(0, count);
 
-    const generated = selectedCuisine.map((cuisine) => {
-      const cuisineInfo = cuisineData[cuisine];
-      const shuffledFoods = [...cuisineInfo.foods].sort(
-        () => Math.random() - 0.5
-      );
+    const generated: ResultItem[] = selectedCuisine.map(
+      (cuisine: string) => {
+        const cuisineInfo =
+          cuisineData[
+            cuisine as keyof typeof cuisineData
+          ];
 
-      const recommendedFoods = shuffledFoods.slice(0, 3);
+        const shuffledFoods = [...cuisineInfo.foods].sort(
+          () => Math.random() - 0.5
+        );
 
-      return {
-        cuisine,
-        type: cuisineInfo.type,
-        foods: recommendedFoods
-      };
-    });
+        const recommendedFoods = shuffledFoods.slice(0, 3);
+
+        return {
+          cuisine,
+          type: cuisineInfo.type,
+          foods: recommendedFoods
+        };
+      }
+    );
 
     setResults(generated);
   };
@@ -249,18 +285,27 @@ export default function RandomDinnerPicker() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-100 to-yellow-50 flex items-center justify-center p-6">
       <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-xl">
+
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-3">今晚吃什么 🍜</h1>
+          <h1 className="text-4xl font-bold mb-3">
+            今晚吃什么 🍜
+          </h1>
+
           <p className="text-gray-500 text-lg">
             随机帮你们挑选晚饭灵感
           </p>
         </div>
 
         <div className="flex items-center gap-4 mb-6">
-          <span className="text-gray-700 font-medium">生成数量：</span>
+          <span className="text-gray-700 font-medium">
+            生成数量：
+          </span>
+
           <select
             value={count}
-            onChange={(e) => setCount(Number(e.target.value))}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              setCount(Number(e.target.value))
+            }
             className="border rounded-xl px-4 py-2"
           >
             <option value={1}>1 个</option>
@@ -278,66 +323,86 @@ export default function RandomDinnerPicker() {
         </button>
 
         {message && (
-          <div className={`mt-6 relative overflow-hidden rounded-3xl border-2 border-orange-300 bg-gradient-to-r from-yellow-200 via-orange-200 to-red-200 p-1 shadow-2xl ${isBouncing ? "animate-bounce" : ""}` }>
+          <div
+            className={`mt-6 relative overflow-hidden rounded-3xl border-2 border-orange-300 bg-gradient-to-r from-yellow-200 via-orange-200 to-red-200 p-1 shadow-2xl ${
+              isBouncing ? "animate-bounce" : ""
+            }`}
+          >
             <div className="bg-white/90 backdrop-blur-sm rounded-[22px] px-6 py-5 text-center">
-              <div className="text-4xl mb-2">⚠️</div>
+              <div className="text-4xl mb-2">
+                ⚠️
+              </div>
+
               <div className="text-2xl font-black text-orange-600 leading-relaxed tracking-wide">
                 {message}
               </div>
+
               <div className="mt-3 text-sm text-gray-500">
                 第 {clickCount} 次纠结中...
               </div>
             </div>
 
             <div className="absolute -top-6 -right-6 w-24 h-24 bg-white/30 rounded-full blur-2xl" />
+
             <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-red-300/30 rounded-full blur-2xl" />
           </div>
         )}
 
         <div className="mt-8 grid gap-4">
-          {results.map((item, index) => (
-            <div
-              key={index}
-              className="bg-orange-50 border border-orange-100 rounded-2xl p-5 shadow-sm"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-sm bg-orange-200 text-orange-800 px-3 py-1 rounded-full font-medium">
-                  {item.type}
-                </span>
-                <span className="text-sm text-gray-500">
-                  {item.cuisine}
-                </span>
-              </div>
+          {results.map(
+            (item: ResultItem, index: number) => (
+              <div
+                key={index}
+                className="bg-orange-50 border border-orange-100 rounded-2xl p-5 shadow-sm"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm bg-orange-200 text-orange-800 px-3 py-1 rounded-full font-medium">
+                    {item.type}
+                  </span>
 
-              <div className="text-center">
-                <div className="text-lg text-gray-500 mb-2">
-                  推荐菜系
-                </div>
-                <div className="text-3xl font-bold mb-4">
-                  {item.cuisine}
+                  <span className="text-sm text-gray-500">
+                    {item.cuisine}
+                  </span>
                 </div>
 
-                <div className="text-lg text-gray-500 mb-2">
-                  推荐吃
-                </div>
-                <div className="flex flex-wrap justify-center gap-3 mt-3">
-                  {item.foods.map((food, foodIndex) => (
-                    <div
-                      key={foodIndex}
-                      className="bg-white border border-orange-200 text-orange-600 px-4 py-2 rounded-full text-lg font-semibold shadow-sm"
-                    >
-                      {food}
-                    </div>
-                  ))}
+                <div className="text-center">
+                  <div className="text-lg text-gray-500 mb-2">
+                    推荐菜系
+                  </div>
+
+                  <div className="text-3xl font-bold mb-4">
+                    {item.cuisine}
+                  </div>
+
+                  <div className="text-lg text-gray-500 mb-2">
+                    推荐吃
+                  </div>
+
+                  <div className="flex flex-wrap justify-center gap-3 mt-3">
+                    {item.foods.map(
+                      (
+                        food: string,
+                        foodIndex: number
+                      ) => (
+                        <div
+                          key={foodIndex}
+                          className="bg-white border border-orange-200 text-orange-600 px-4 py-2 rounded-full text-lg font-semibold shadow-sm"
+                        >
+                          {food}
+                        </div>
+                      )
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          )}
         </div>
 
         <div className="mt-8 text-sm text-gray-400 text-center">
           实在选不出来的话，可以默认选第一个 😄
         </div>
+
       </div>
     </div>
   );
