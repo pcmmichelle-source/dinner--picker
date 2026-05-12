@@ -177,7 +177,7 @@ export default function RandomDinnerPicker() {
     "不吃了，修仙"
   ];
 
-  const easterEggs = {
+  const easterEggs: Record<number, string>  = {
     7: "再给你们一次机会",
     9: "建议直接吃上一顿剩下的",
     12: "我累了，你们自己看着办吧"
