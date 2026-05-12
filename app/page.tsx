@@ -166,7 +166,7 @@ export default function RandomDinnerPicker() {
   const [count, setCount] = React.useState(3);
   const [clickCount, setClickCount] = React.useState(0);
   const [message, setMessage] = React.useState("");
-  const [usedMessages, setUsedMessages] = React.useState([]);
+  const [usedMessages, setUsedMessages] = React.useState<string[]>([]);
   const [isBouncing, setIsBouncing] = React.useState(false);
 
   const funnyMessages = [
